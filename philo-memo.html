@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 Philo-Mémo — Fiches de Révision Bac</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f7f5f0;
+            --card: #ffffff;
+            --text: #2d2a26;
+            --text-light: #6b6560;
+            --accent: #c45c3e;
+            --accent-light: #e8a87c;
+            --accent2: #4a6fa5;
+            --accent2-light: #7ba3d1;
+            --green: #5a8f7b;
+            --green-light: #8fc1ad;
+            --purple: #7b5e8a;
+            --purple-light: #b39bc8;
+            --border: #e8e4de;
+            --shadow: 0 4px 24px rgba(45,42,38,0.08);
+            --shadow-hover: 0 12px 40px rgba(45,42,38,0.14);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            min-height: 100vh;
+        }
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, #2d2a26 0%, #4a4540 100%);
+            color: #fff;
+            padding: 40px 20px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(196,92,62,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -10%;
+            width: 40%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(74,111,165,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .header-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+        header h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        header .tagline {
+            font-size: 1rem;
+            opacity: 0.7;
+            font-weight: 300;
+            margin-bottom: 24px;
+        }
+        .search-wrap {
+            position: relative;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+        .search-wrap input {
+            width: 100%;
+            padding: 14px 48px 14px 20px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            font-size: 0.95rem;
+            backdrop-filter: blur(10px);
+            outline: none;
+            transition: all 0.3s;
+        }
+        .search-wrap input::placeholder { color: rgba(255,255,255,0.45); }
+        .search-wrap input:focus {
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 0 0 3px rgba(196,92,62,0.3);
+        }
+        .search-wrap .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.5;
+        }
+        .progress-outer {
+            max-width: 420px;
+            margin: 20px auto 0;
+        }
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            border-radius: 2px;
+        }
+        .progress-text {
+            font-size: 0.78rem;
+            opacity: 0.55;
+            margin-top: 8px;
+            text-align: center;
+        }
+        /* ===== MAIN ===== */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 16px 60px;
+        }
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            margin: 30px 0 16px;
+            font-weight: 600;
+        }
+        /* ===== NOTION CARD ===== */
+        .notion-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+        .notion-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+        .notion-card.opened {
+            border-color: var(--accent);
+            box-shadow: 0 4px 24px rgba(196,92,62,0.1);
+        }
+        .notion-card.opened .notion-header {
+            background: linear-gradient(135deg, rgba(196,92,62,0.06), rgba(232,168,124,0.04));
+        }
+        .notion-header {
+            display: flex;
+            align-items: center;
+            padding: 18px 22px;
+            gap: 14px;
+            transition: background 0.3s;
+        }
+        .notion-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            color: #fff;
+        }
+        .notion-num.n1 { background: var(--accent); }
+        .notion-num.n2 { background: var(--accent2); }
+        .notion-num.n3 { background: var(--green); }
+        .notion-num.n4 { background: var(--purple); }
+        .notion-num.n5 { background: #c4a35e; }
+        .notion-num.n6 { background: #5e7a8a; }
+        .notion-info { flex: 1; min-width: 0; }
+        .notion-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .notion-preview {
+            font-size: 0.82rem;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .notion-arrow {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            transition: transform 0.3s;
+            flex-shrink: 0;
+        }
+        .notion-card.opened .notion-arrow { transform: rotate(180deg); color: var(--accent); }
+        .notion-body {
+            display: none;
+            padding: 0 22px 24px;
+            animation: fadeIn 0.4s ease;
+        }
+        .notion-card.opened .notion-body { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* ===== DEFINITION ===== */
+        .def-block {
+            background: linear-gradient(135deg, #faf8f5, #f5f2ec);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            margin-bottom: 18px;
+            border-left: 3px solid var(--accent);
+        }
+        .def-block h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .def-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 6px;
+            padding-left: 14px;
+            position: relative;
+        }
+        .def-block p::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-light);
+            font-weight: bold;
+        }
+        .def-block p:last-child { margin-bottom: 0; }
+        /* ===== PHILOSOPHES ===== */
+        .philos-block { margin-bottom: 18px; }
+        .philos-block h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent2);
+            margin-bottom: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .philos-block h4::before {
+            content: '';
+            width: 20px;
+            height: 2px;
+            background: var(--accent2);
+            border-radius: 1px;
+        }
+        .philos-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+        .philos-step {
+            position: relative;
+            padding-left: 32px;
+            padding-bottom: 20px;
+        }
+        .philos-step:last-child { padding-bottom: 0; }
+        .philos-step::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 6px;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--border), transparent);
+        }
+        .philos-step:last-child::before { bottom: auto; height: 6px; }
+        .philos-step::after {
+            content: attr(data-step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-light);
+            z-index: 1;
+        }
+        .philos-step.active::after {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #fff5f2;
+        }
+        .philos-name {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+        .philos-work {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        .philos-quote {
+            background: linear-gradient(135deg, #fef9f3, #fdf5ec);
+            border-left: 3px solid var(--accent-light);
+            padding: 12px 16px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .philos-quote::before {
+            content: '"';
+            position: absolute;
+            top: -2px;
+            left: 8px;
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.2rem;
+            color: var(--accent-light);
+            opacity: 0.4;
+            line-height: 1;
+        }
+        .philos-quote p {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: #5a3a2a;
+            padding-left: 20px;
+            line-height: 1.5;
+        }
+        .philos-explain {
+            font-size: 0.88rem;
+            color: var(--text-light);
+            padding-left: 4px;
+            line-height: 1.7;
+        }
+        .philos-explain strong { color: var(--text); font-weight: 600; }
+        .philos-explain em { color: var(--accent); font-style: normal; font-weight: 500; }
+        /* ===== SYNTHESIS ===== */
+        .synth-block {
+            background: linear-gradient(135deg, #f0f7f4, #e8f2ed);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            margin-top: 16px;
+            border: 1px solid rgba(90,143,123,0.2);
+        }
+        .synth-block h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--green);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .synth-block p {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.7;
+        }
+        .synth-block p strong { color: var(--green); }
+        /* ===== EXEMPLES ===== */
+        .ex-block {
+            background: linear-gradient(135deg, #f5f0f7, #f0e8f5);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            margin-top: 14px;
+            border: 1px solid rgba(123,94,138,0.15);
+        }
+        .ex-block h4 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--purple);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .ex-item {
+            font-size: 0.88rem;
+            color: var(--text);
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(123,94,138,0.15);
+            line-height: 1.6;
+        }
+        .ex-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .ex-item strong { color: var(--purple); font-weight: 600; }
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 30px 20px 40px;
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+        footer span { color: var(--accent); }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            header { padding: 30px 16px 40px; }
+            main { padding: 20px 12px 40px; }
+            .notion-header { padding: 14px 16px; }
+            .notion-body { padding: 0 16px 20px; }
+            .notion-title { font-size: 1.15rem; }
+            .philos-step { padding-left: 28px; }
+            .philos-quote p { font-size: 0.95rem; }
+        }
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-light); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <h1>📖 Philo-Mémo</h1>
+            <p class="tagline">17 notions essentielles — De la simple idée à la complexité philosophique</p>
+            <div class="search-wrap">
+                <input type="text" id="searchBox" placeholder="Rechercher une notion, un philosophe...">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="progress-outer">
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-text" id="progressText">0 / 17 notions consultées</div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="section-label">Les notions</div>
+        <div id="notionsContainer"></div>
+    </main>
+
+    <footer>
+        Fait avec <span>♥</span> pour réviser partout, efficacement.
+    </footer>
+
+<script>
+const notions = [
+
+{
+    id: 1,
+    title: "L'Art",
+    color: "n1",
+    preview: "Imitation, création, expression — trois regards sur l'art",
+    definitions: [
+        "<b>Sens large (étymologique)</b> : tout savoir-faire technique (artisanat, arts martiaux). S'identifie à la technique.",
+        "<b>Sens strict (esthétique)</b> : activité produisant des œuvres destinées à être contemplées (musique, peinture, sculpture).",
+        "<b>Trois pôles</b> : l'artiste (créateur), l'œuvre (objet), le spectateur (récepteur).",
+        "<b>Art contemporain</b> : cherche souvent à créer un choc et à questionner la nature même de l'art."
+    ],
+    philosophes: [
+        {
+            name: "Platon",
+            work: "La République",
+            step: 1,
+            quote: "L'art est l'imitation d'une imitation.",
+            explain: "Platon voit l'art comme une <em>copie dégradée</em> du réel. Le monde sensible imite déjà le monde des Idées ; l'art imite le monde sensible : c'est une <strong>copie au carré</strong>, qui nous éloigne de la vérité. L'artiste est un <em>faux sage</em> qu'il faut bannir de la cité."
+        },
+        {
+            name: "Aristote",
+            work: "La Poétique",
+            step: 2,
+            quote: "L'art imite la nature, mais il ne s'agit pas de simplement copier ; l'artiste doit faire apparaître quelque chose qui révèle une vérité.",
+            explain: "Aristote répond à Platon : imiter ne signifie pas copier bêtement. L'art <em>révèle</em> quelque chose de nouveau — il purifie les passions (<em>catharsis</em>) et procure un plaisir intellectuel. L'art est <strong>utile à la cité</strong>, contrairement à ce que pensait Platon."
+        },
+        {
+            name: "Kant",
+            work: "Critique de la faculté de juger",
+            step: 3,
+            quote: "Le beau est ce qui plaît universellement sans concept.",
+            explain: "Kant va plus loin : l'art n'est ni imitation ni simple plaisir. Le génie artistique <em>invente de nouvelles règles</em> que la raison ne peut déduire. Le jugement esthétique est <strong>subjectif mais universel</strong> — tout le monde devrait ressentir le même plaisir devant le beau."
+        }
+    ],
+    synthese: "De Platon à Kant, la conception de l'art évolue : de <strong>danger illusoire</strong> (Platon) à <strong>révélation de vérité</strong> (Aristote) puis à <strong>création autonome du génie</strong> (Kant). L'art contemporain radicalise cette autonomie en questionnant ses propres limites.",
+    exemples: [
+        "<b>Les Bergers d'Arcadie</b> (Poussin) : beauté classique, harmonie, savoir-faire technique.",
+        "<b>PlayS</b> (CS) : sculpture en métal rappelant de la pâte à modeler — l'art se questionne lui-même.",
+        "<b>Marcel Duchamp</b> : la <em>Fountain</em> (urinoir) — tout peut-il être art ?"
+    ]
+},
+{
+    id: 2,
+    title: "L'État",
+    color: "n2",
+    preview: "Du contrat social à l'État minimal — comment vivre ensemble ?",
+    definitions: [
+        "<b>Définition</b> : ensemble des institutions permettant la défense et l'administration d'une communauté sur un territoire.",
+        "<b>État répressif</b> : interdit, punit, met en prison (police, justice).",
+        "<b>État-providence</b> : construit, fournit des services publics, aide les plus pauvres (écoles, hôpitaux).",
+        "<b>Public vs Privé</b> : l'État incarne le domaine public, opposé à la sphère privée des individus."
+    ],
+    philosophes: [
+        {
+            name: "Hobbes",
+            work: "Léviathan",
+            step: 1,
+            quote: "L'homme est un loup pour l'homme. Sans État, c'est la guerre de tous contre tous.",
+            explain: "Hobbes part d'une vision <em>pessimiste</em> de l'homme. L'état de nature est chaotique et violent. L'État (le Léviathan) est <strong>nécessaire à notre survie</strong> : nous cédons notre liberté naturelle en échange de la sécurité. L'obéissance est la condition de la paix civile."
+        },
+        {
+            name: "Rousseau",
+            work: "Du Contrat Social",
+            step: 2,
+            quote: "L'homme est né libre, et partout il est dans les fers.",
+            explain: "Rousseau répond à Hobbes : l'État n'est pas une <em>nécessité naturelle</em> mais une <strong>invention humaine</strong>. Il doit garantir la <em>liberté politique</em> — obéir à des lois qu'on s'est données soi-même. L'État est légitime s'il exprime la <strong>volonté générale</strong>, non la volonté de tous."
+        },
+        {
+            name: "Mill",
+            work: "De la Liberté",
+            step: 3,
+            quote: "La seule raison légitime pour que l'État use de la force est d'empêcher de nuire à autrui.",
+            explain: "Mill limite drastiquement le pouvoir de l'État : <strong>liberté individuelle</strong> avant tout. L'État ne doit intervenir que pour protéger autrui. C'est la base du <em>libéralisme politique</em> et de l'État minimal — une réponse aux excès des États totalitaires."
+        }
+    ],
+    synthese: "Trois visions s'opposent : <strong>sécurité absolue</strong> (Hobbes), <strong>liberté par l'autonomie collective</strong> (Rousseau), <strong>liberté individuelle maximale</strong> (Mill). Le débat reste vif : l'État doit-il tout réguler ou se retirer ?",
+    exemples: [
+        "<b>Javier Milei</b> (Argentine) : réduction drastique de l'État, privatisations massives — illustration de l'État minimal.",
+        "<b>Lois de Nuremberg</b> (1935) : légales mais moralement illégitimes — tension entre légalité et légitimité.",
+        "<b>État-providence scandinave</b> : hautes taxes, services publics généreux — compromis entre liberté et solidarité."
+    ]
+},
+{
+    id: 3,
+    title: "La Conscience",
+    color: "n3",
+    preview: "De l'éveil au monde à la conscience réflexive et morale",
+    definitions: [
+        "<b>Conscience spontanée</b> : fait d'être éveillé, présent au monde (les animaux l'ont).",
+        "<b>Conscience réflexive</b> : capacité à se penser soi-même, faire retour sur ses états psychiques — propre à l'homme.",
+        "<b>Conscience morale</b> : capacité à distinguer le bien du mal, à juger et délibérer.",
+        "<b>Libre arbitre</b> : la conscience suppose la liberté de choisir, donc la responsabilité."
+    ],
+    philosophes: [
+        {
+            name: "Descartes",
+            work: "Méditations métaphysiques",
+            step: 1,
+            quote: "Je pense, donc je suis.",
+            explain: "Descartes fonde toute connaissance sur la <em>conscience de soi</em>. Même si tout est douteux, le fait de douter prouve que je pense, donc que j'existe. La conscience est <strong>indubitable</strong>, première vérité absolue. Le <em>cogito</em> est le fondement de toute philosophie moderne."
+        },
+        {
+            name: "Rousseau",
+            work: "Émile ou De l'éducation",
+            step: 2,
+            quote: "La conscience est un instinct divin, un guide assuré, un juge infaillible du bien et du mal.",
+            explain: "Rousseau ajoute une dimension <em>morale</em> : la conscience n'est pas seulement penser, c'est <strong>sentir intérieurement le bien et le mal</strong>. C'est une voix naturelle, innée, qu'il ne faut pas étouffer par la société. La conscience morale est le cœur de l'éthique rousseauiste."
+        },
+        {
+            name: "Freud",
+            work: "Le Moi et le Ça",
+            step: 3,
+            quote: "Le moi n'est pas maître dans sa propre maison.",
+            explain: "Freud <em>démystifie</em> la conscience : elle n'est que la <strong>partie émergée de l'iceberg</strong>. Le Ça (pulsions), le Surmoi (morale intériorisée) et le Moi (conscience) sont en conflit permanent. La conscience ne contrôle pas tout — elle est <strong>illusoire dans sa toute-puissance</strong>."
+        }
+    ],
+    synthese: "De Descartes à Freud, la conscience passe de <strong>fondement absolu du savoir</strong> à <strong>voix morale intérieure</strong> puis à <strong>illusion de maîtrise</strong>. Chaque philosophe complexifie notre compréhension de ce que signifie 'être conscient'.",
+    exemples: [
+        "<b>Déclaration de Cambridge (2012)</b> : de nombreux animaux ont une conscience — remet en cause l'exclusivité humaine.",
+        "<b>Membre fantôme</b> : le corps surprend la conscience, qui n'est pas maîtresse de tout.",
+        "<b>Expérience de Libet</b> : le cerveau décide avant que la conscience en ait l'intention — Freud avait-il raison ?"
+    ]
+},
+{
+    id: 4,
+    title: "La Justice",
+    color: "n4",
+    preview: "Donner à chacun son dû — mais qui décide de ce qui est dû ?",
+    definitions: [
+        "<b>Justice comme principe</b> : idéal d'égalité et d'ordre, donner à chacun ce qui lui est dû.",
+        "<b>Justice comme institution</b> : ensemble des organismes chargés d'appliquer la loi.",
+        "<b>Justice distributive</b> : répartir équitablement les biens et les charges.",
+        "<b>Justice pénale</b> : punir les infractions. <b>Légal ≠ Légitime</b> : une loi peut être injuste."
+    ],
+    philosophes: [
+        {
+            name: "Sophocle",
+            work: "Antigone",
+            step: 1,
+            quote: "Je n'ai pas à désobéir à des lois qui sont éternelles et non écrites.",
+            explain: "Antigone désobéit à la loi du roi Créon pour respecter la <em>loi divine</em> (enterrer son frère). C'est le <strong>premier conflit entre légalité et légitimité</strong> : la justice humaine peut être injuste face à des principes supérieurs. La justice positive n'est pas la justice absolue."
+        },
+        {
+            name: "Aristote",
+            work: "Éthique à Nicomaque",
+            step: 2,
+            quote: "Appliquer la loi est nécessaire, mais les lois sont trop générales ; il faut aussi l'équitable.",
+            explain: "Aristote nuance : la loi est nécessaire mais <em>imparfaite</em> car trop générale. L'<strong>équité</strong> (épikieia) permet d'adapter la justice à chaque cas particulier. La justice n'est pas mécanique — elle exige <strong>jugement et discernement</strong>."
+        },
+        {
+            name: "Hegel",
+            work: "Principes de la philosophie du droit",
+            step: 3,
+            quote: "Le châtiment fait honneur au criminel car il le reconnaît comme une conscience libre.",
+            explain: "Hegel transforme radicalement la justice pénale : punir, c'est <em>respecter</em> le criminel comme être rationnel et libre. Refuser de punir, c'est le traiter comme un animal ou un enfant. La justice pénale est <strong>reconnaissance de la liberté</strong> de l'autre."
+        }
+    ],
+    synthese: "La justice évolue d'un <strong>conflit entre lois</strong> (Antigone) vers une <strong>justice adaptée et équitable</strong> (Aristote) puis vers une <strong>justice comme reconnaissance de la liberté</strong> (Hegel). Chaque étape complexifie notre rapport au droit et à la punition.",
+    exemples: [
+        "<b>12 hommes en colère</b> (Lumet) : le doute raisonnable comme principe de justice.",
+        "<b>Lois de Nuremberg</b> : légalité nazie vs légitimité morale — Antigone revisitée.",
+        "<b>Justice restaurative</b> : punir pour réparer, pas pour venger — héritage hégélien."
+    ]
+},
+{
+    id: 5,
+    title: "La Liberté",
+    color: "n5",
+    preview: "Être libre, est-ce faire ce qu'on veut ou vouloir ce qu'on fait ?",
+    definitions: [
+        "<b>Liberté naturelle</b> : faire ce qu'on veut sans contrainte extérieure.",
+        "<b>Liberté politique</b> : faire ce qu'on veut en respectant les règles sociales (ne pas nuire à autrui).",
+        "<b>Liberté intérieure / autonomie</b> : obéir à sa volonté profonde plutôt qu'à ses désirs immédiats.",
+        "<b>Libre arbitre</b> : capacité à choisir par soi-même, sans déterminisme."
+    ],
+    philosophes: [
+        {
+            name: "Spinoza",
+            work: "Lettre à Schuller",
+            step: 1,
+            quote: "Les hommes se croient libres parce qu'ils ignorent les causes qui les déterminent.",
+            explain: "Spinoza déconstruit l'illusion du libre arbitre. Nous sommes <em>déterminés</em> par des causes que nous ignorons (notre corps, notre environnement, nos affects). La vraie liberté, c'est <strong>comprendre ces causes</strong> — devenir cause de soi-même par la raison."
+        },
+        {
+            name: "Kant",
+            work: "Fondements de la métaphysique des mœurs",
+            step: 2,
+            quote: "Agis uniquement d'après la maxime qui fait que tu peux vouloir en même temps qu'elle devienne une loi universelle.",
+            explain: "Kant répond à Spinoza : la liberté n'est pas absence de contrainte, c'est <strong>autonomie</strong>. Être libre, c'est obéir à la loi morale que <em>sa propre raison</em> se donne. La liberté est <strong>rationnelle et universelle</strong>, pas capricieuse."
+        },
+        {
+            name: "Sartre",
+            work: "L'Être et le Néant",
+            step: 3,
+            quote: "L'homme est condamné à être libre.",
+            explain: "Sartre radicalise Kant : nous sommes <em>totalement</em> libres et <em>totalement</em> responsables. Même ne pas choisir est un choix. La liberté est <strong>angoissante</strong> car nous ne pouvons nous cacher derrière aucune excuse (Dieu, la nature, la société). <em>Condamnés</em> car nous n'avons pas choisi d'être libres."
+        }
+    ],
+    synthese: "De Spinoza à Sartre, la liberté passe de <strong>illusion à surmonter par la connaissance</strong> (Spinoza) à <strong>autonomie rationnelle</strong> (Kant) puis à <strong>responsabilité absolue et angoissante</strong> (Sartre). La liberté s'enrichit mais s'alourdit à chaque étape.",
+    exemples: [
+        "<b>Transhumanisme</b> : libérer l'homme de ses limites naturelles — liberté spinoziste ?",
+        "<b>Occupation allemande</b> (Sartre) : jamais l'homme n'a été aussi libre car les choix s'imposaient.",
+        "<b>Déterminisme génétique</b> : nos gènes nous déterminent-ils ? Spinoza dirait oui, Sartre non."
+    ]
+},
+{
+    id: 6,
+    title: "La Nature",
+    color: "n6",
+    preview: "Nature sauvage, nature humaine, nature détruite — trois regards",
+    definitions: [
+        "<b>Nature au sens large</b> : tout ce qui n'est pas fabriqué par l'homme (arbres, ciel, animaux).",
+        "<b>Nature humaine</b> : ce qui est naturel en nous (langage, émotions, instincts).",
+        "<b>Nature vs Culture</b> : la nature est ce qui est donné, la culture est ce qui est acquis et construit.",
+        "<b>Dénaturation</b> : processus par lequel la culture corrompt ou transforme la nature humaine."
+    ],
+    philosophes: [
+        {
+            name: "Aristote",
+            work: "Physique",
+            step: 1,
+            quote: "La nature est une puissance qui désire, orientée vers un but.",
+            explain: "Aristote voit la nature comme <em>vivante et téléologique</em> : chaque être a une <strong>fin interne</strong> (la graine 'désire' devenir arbre). La nature n'est pas passive — elle est <strong>force active orientée</strong>. C'est une vision organique et harmonieuse du monde."
+        },
+        {
+            name: "Rousseau",
+            work: "Discours sur l'origine de l'inégalité",
+            step: 2,
+            quote: "Tout est bien sortant des mains de l'Auteur des choses, tout dégénère entre les mains de l'homme.",
+            explain: "Rousseau inverse Aristote : la <em>culture est une dénaturation</em>. L'homme est <strong>bon par nature</strong>, c'est la société qui le corrompt (propriété, inégalités, comparaison). La nature est un <strong>état originel perdu</strong> qu'il faut retrouver dans l'éducation (Émile)."
+        },
+        {
+            name: "Heidegger",
+            work: "La Question de la technique",
+            step: 3,
+            quote: "La technique moderne réduit la nature à un stock de ressources disponibles.",
+            explain: "Heidegger dénonce la <em>conception techniciste</em> de la nature : elle n'est plus un monde à habiter mais un <strong>fonds de ressources</strong> à exploiter (Bestand). Cette réduction menace non seulement la nature mais <strong>l'essence même de l'homme</strong> comme être-au-monde."
+        }
+    ],
+    synthese: "La nature est successivement <strong>puissance vivante orientée</strong> (Aristote), <strong>état originel corrompu par la société</strong> (Rousseau), puis <strong>ressource à exploiter par la technique</strong> (Heidegger). Chaque philosophe révèle une dimension de notre rapport ambigu à la nature.",
+    exemples: [
+        "<b>OGM et CRISPR</b> : transformer les gènes — jusqu'où la technique peut-elle aller ?",
+        "<b>Écologie profonde</b> : la nature a une valeur intrinsèque — héritage rousseauiste.",
+        "<b>Fracking et déforestation</strong> : réduction de la nature à ressource — critique heideggerienne."
+    ]
+},
+
+{
+    id: 7,
+    title: "La Raison",
+    color: "n1",
+    preview: "Bien juger, expliquer, agir — la raison au cœur de l'humanité",
+    definitions: [
+        "<b>Sens intellectuel</b> : faculté de bien juger, distinguer le vrai du faux (rationalité logique).",
+        "<b>Sens épistémique</b> : principe explicatif d'une proposition, réponse à un 'pourquoi ?'.",
+        "<b>Sens pratique</b> : capacité à voir le bien et le mal, ce qui est raisonnable (raison morale).",
+        "<b>Science = Raison + Expérience</b> : la raison seule ne suffit pas, il faut aussi l'expérience."
+    ],
+    philosophes: [
+        {
+            name: "Descartes",
+            work: "Discours de la méthode",
+            step: 1,
+            quote: "Le bon sens est la chose du monde la mieux partagée.",
+            explain: "Descartes affirme que <em>tous les hommes possèdent la raison</em>, mais elle est mal employée. Il faut une <strong>méthode rigoureuse</strong> (doute, analyse, synthèse, vérification) pour éviter l'erreur. La raison est <strong>universelle</strong> mais doit être disciplinée."
+        },
+        {
+            name: "Kant",
+            work: "Qu'est-ce que les Lumières ?",
+            step: 2,
+            quote: "Ose te servir de ton propre entendement !",
+            explain: "Kant appelle à l'<em>autonomie de la raison</em>. Sortir de la tutelle (minorité intellectuelle) c'est <strong>penser par soi-même</strong>. La raison dicte la <strong>loi morale universelle</strong> — être moral, c'est être rationnel. C'est le manifeste des Lumières."
+        },
+        {
+            name: "Pascal",
+            work: "Pensées",
+            step: 3,
+            quote: "Le cœur a ses raisons que la raison ne connaît point.",
+            explain: "Pascal <em>limite</em> la raison : elle ne peut pas tout. L'amour, la foi, l'intuition du premier principe échappent à la raison discursive. Le <strong>cœur</strong> (intuition, sentiment) a ses propres raisons. La raison sans le cœur est <strong>aveugle et orgueilleuse</strong>."
+        }
+    ],
+    synthese: "Descartes fonde la <strong>raison méthodique</strong>, Kant en fait l'<strong>outil d'émancipation morale</strong>, Pascal en révèle les <strong>limites</strong>. La raison est puissante mais non toute-puissante — elle a besoin du cœur pour ce qui dépasse le calcul.",
+    exemples: [
+        "<b>Biais cognitifs</b> (Kahneman) : notre raison est pleine de raccourcis — Pascal avait raison ?",
+        "<b>Argument ontologique</b> (Descartes) : prouver Dieu par la raison — critiqué par Kant.",
+        "<b>IA et raison</b> : une machine peut-elle raisonner comme un humain ?"
+    ]
+},
+{
+    id: 8,
+    title: "La Religion",
+    color: "n2",
+    preview: "Foi, raison et communauté — trois piliers de la religion",
+    definitions: [
+        "<b>Croire en Dieu</b> : rapport à quelque chose de sacré, de transcendant.",
+        "<b>Religion vs Foi</b> : la foi est individuelle, la religion est collective (pratiques, institutions).",
+        "<b>Étymologie</b> : <em>religare</em> (relier au sacré et entre individus) ou <em>relegere</em> (relire les principes).",
+        "<b>Religion comme univers de croyances et pratiques</b> : fêtes, règles de vie, communauté."
+    ],
+    philosophes: [
+        {
+            name: "Pascal",
+            work: "Pensées",
+            step: 1,
+            quote: "Il est rationnellement avantageux de parier sur l'existence de Dieu.",
+            explain: "Pascal propose un <em>calcul rationnel du pari</em> : si Dieu existe, on gagne l'infini ; s'il n'existe pas, on ne perd que le fini. Même sans preuve, <strong>parier sur Dieu est rationnel</strong>. La foi n'est pas irrationnelle — elle est <strong>prudente</strong>."
+        },
+        {
+            name: "Kant",
+            work: "Critique de la raison pratique",
+            step: 2,
+            quote: "On n'a pas besoin de la religion pour fonder une morale car la morale est rationnelle.",
+            explain: "Kant sépare <em>morale et religion</em> : la morale repose sur la <strong>raison pratique</strong>, pas sur Dieu. L'existence de Dieu n'est pas démontrable — elle est seulement une <strong>postulation de la raison pratique</strong> (pour garantir le bonheur proportionné à la vertu)."
+        },
+        {
+            name: "Freud",
+            work: "L'Avenir d'une illusion",
+            step: 3,
+            quote: "La religion est une névrose collective, une consolation infantile.",
+            explain: "Freud <em>réduit</em> la religion à une <strong>projection psychologique</strong> : le désir enfantin d'avoir des parents tout-puissants. La religion est une <strong>illusion nécessaire</strong> pour les faibles, mais l'humanité doit en grandir. C'est une critique <strong>radicale et réductrice</strong> de toute transcendance."
+        }
+    ],
+    synthese: "De Pascal à Freud, la religion passe de <strong>pari rationnel prudent</strong> à <strong>superflu moral face à la raison</strong> (Kant) puis à <strong>illusion infantile à dépasser</strong> (Freud). Trois regards croissants en scepticisme, mais chacun apporte une pierre à la compréhension du phénomène religieux.",
+    exemples: [
+        "<b>Tu ne tueras point</b> (film) : conflit entre devoir de citoyen et devoir de croyant.",
+        "<b>85% des humains ont une religion</b> — Freud expliquerait-il cela par une névrose collective ?",
+        "<b>Laïcité française</b> : séparation Église-État, héritage kantien de l'autonomie morale."
+    ]
+},
+{
+    id: 9,
+    title: "La Science",
+    color: "n3",
+    preview: "Méthode, vérité et révolution — la science en question",
+    definitions: [
+        "<b>Manière de connaître les lois générales du monde</b> par la méthode et l'expérience.",
+        "<b>3 catégories</b> : sciences expérimentales (physique), déductives (maths), humaines (histoire, psychologie).",
+        "<b>Méthode et règles strictes</b> : la science se définit par sa démarche, pas seulement ses résultats.",
+        "<b>Théorie et expérience</b> : étroitement mêlées dans la démarche scientifique."
+    ],
+    philosophes: [
+        {
+            name: "Karl Popper",
+            work: "La logique de la découverte scientifique",
+            step: 1,
+            quote: "Une théorie est scientifique si elle est réfutable.",
+            explain: "Popper définit le critère de <strong>démarcation</strong> : une théorie est scientifique si elle peut être <em>falsifiée</em> (testée et potentiellement réfutée). La psychanalyse et le marxisme ne le sont pas — ils <strong>expliquent tout</strong>, donc rien. La science progresse par <strong>réfutations</strong>, pas par confirmations."
+        },
+        {
+            name: "Hume",
+            work: "Traité de la nature humaine",
+            step: 2,
+            quote: "Les théories générales ne peuvent jamais être légitimées rigoureusement par les faits seuls.",
+            explain: "Hume pose le <strong>problème de l'induction</em> : comment passer de faits particuliers à une loi générale ? On ne peut pas prouver que le soleil se lèvera demain. Toute connaissance scientifique <strong>dégénère en probabilité</strong> — la certitude absolue est impossible."
+        },
+        {
+            name: "Kuhn",
+            work: "La structure des révolutions scientifiques",
+            step: 3,
+            quote: "L'histoire des sciences n'est pas cumulative, mais marquée par des révolutions.",
+            explain: "Kuhn révolutionne la vision de la science : elle progresse par <strong>paradigmes</strong> (cadres théoriques dominants) et <strong>ruptures révolutionnaires</strong> (changement de paradigme). Newton n'est pas une amélioration d'Aristote — c'est un <strong>monde scientifique différent</strong>. La science n'est pas linéaire."
+        }
+    ],
+    synthese: "Popper définit la <strong>scientificité par la réfutabilité</strong>, Hume montre ses <strong>limites épistémologiques</strong>, Kuhn révèle sa <strong>structure historique non cumulative</strong>. Ensemble, ils montrent que la science est à la fois rigoureuse, incertaine et historiquement située.",
+    exemples: [
+        "<b>Phrénologie</b> (19e s.) : 'science' réfutable et réfutée — Popper aurait validé sa falsification.",
+        "<b>Galilée et l'héliocentrisme</b> : révolution copernicienne = changement de paradigme (Kuhn).",
+        "<b>Changement climatique</b> : consensus scientifique — mais peut-on atteindre la certitude (Hume) ?"
+    ]
+},
+{
+    id: 10,
+    title: "La Technique",
+    color: "n4",
+    preview: "Savoir-faire, objet technique, domination du monde — trois sens",
+    definitions: [
+        "<b>Sens large</b> : savoir-faire technique, habileté, talent (artisanat, cuisine).",
+        "<b>Sens strict</b> : les objets techniques (Internet, vaccins, machines).",
+        "<b>Conception quantitative</b> : la technique engendre une vision purement mesurable du monde.",
+        "<b>Technique et science</b> : corrélation entre progrès scientifique et instruments techniques."
+    ],
+    philosophes: [
+        {
+            name: "Platon",
+            work: "Protagoras (mythe de Prométhée)",
+            step: 1,
+            quote: "La puissance technique humaine est une réaction à notre impuissance naturelle.",
+            explain: "Platon raconte que Prométhée a volé le feu et les savoir-faire techniques pour compenser <strong>l'impuissance naturelle</strong> de l'homme (nu, sans griffes, sans force). La technique est <em>compensation</em> — elle répare un manque originel. C'est une vision <strong>optimiste et anthropologique</strong>."
+        },
+        {
+            name: "Gorgias",
+            work: "",
+            step: 2,
+            quote: "La technique est un simple moyen et est neutre moralement.",
+            explain: "Gorgias défend la <strong>neutralité de la technique</em> : c'est un <em>instrument</em>, ni bon ni mauvais en soi. Seul <strong>l'usage</strong> compte. C'est la position classique du progrès technique : la technique est <strong>amorale</strong>, c'est l'homme qui en est responsable."
+        },
+        {
+            name: "Heidegger",
+            work: "La Question de la technique",
+            step: 3,
+            quote: "La technique moderne réduit la nature à un stock de ressources disponibles.",
+            explain: "Heidegger <em>réfute</em> la neutralité : la technique moderne n'est pas un simple moyen, c'est une <strong>manière d'être au monde</strong> qui réduit tout (nature, hommes) à des <strong>ressources exploitables</strong> (Bestand). Ce n'est pas l'usage qui est dangereux — c'est <strong>l'essence même</strong> de la technique moderne qui menace notre humanité."
+        }
+    ],
+    synthese: "La technique est d'abord <strong>compensation de notre faiblesse</strong> (Platon), puis <strong>outil neutre</strong> (Gorgias), enfin <strong>mode d'être au monde réducteur</strong> (Heidegger). La question n'est plus 'la technique est-elle bonne ?' mais 'vivons-nous encore dans un monde qui n'est pas technique ?'",
+    exemples: [
+        "<b>Tourage des croissants</b> : savoir-faire technique avec règles et répétition — Platon.",
+        "<b>OGM</b> : outil neutre (Gorgias) ou réduction de la vie à ressource (Heidegger) ?",
+        "<b>Algorithmes de recommandation</b> : réduction de l'humain à données exploitables — Heidegger."
+    ]
+},
+{
+    id: 11,
+    title: "La Vérité",
+    color: "n5",
+    preview: "Correspondance, cohérence, dévoilement — trois faces de la vérité",
+    definitions: [
+        "<b>Vérité-correspondance</b> : adéquation entre une proposition et la réalité.",
+        "<b>Vérité-cohérence</b> : cohérence logique entre les éléments d'un raisonnement.",
+        "<b>Vérité-évidence</b> : principe immédiatement connu comme vrai, sans démonstration.",
+        "<b>Vérité-dévoilement</b> (Heidegger) : façon dont l'homme établit les choses dans leur présence."
+    ],
+    philosophes: [
+        {
+            name: "Protagoras",
+            work: "",
+            step: 1,
+            quote: "L'homme est la mesure de toute chose.",
+            explain: "Protagoras inaugure le <strong>relativisme</strong> : il n'y a pas de vérité absolue, seulement des <em>vérités humaines</em>, relatives à chaque individu et chaque culture. Ce qui est vrai pour moi ne l'est pas forcément pour toi. C'est la <strong>négation de toute vérité universelle</strong>."
+        },
+        {
+            name: "Platon",
+            work: "Allégorie de la caverne",
+            step: 2,
+            quote: "Les hommes sont spontanément plongés dans une ignorance radicale.",
+            explain: "Platon répond à Protagoras : les hommes voient des <em>ombres</em> (opinions) et confondent cela avec la vérité. La <strong>vérité est ailleurs</strong> — dans le monde des Idées, accessible par la raison. Sortir de la caverne, c'est accéder à la <strong>vérité absolue et éternelle</strong>."
+        },
+        {
+            name: "Kant",
+            work: "Critique de la raison pratique",
+            step: 3,
+            quote: "La vérité est la valeur la plus importante au monde.",
+            explain: "Kant élève la vérité au rang de <strong>valeur suprême</strong>, supérieure au bonheur. Mais il limite aussi la vérité : nous ne connaissons que les <em>phénomènes</em> (apparences structurées par notre entendement), pas les <strong>choses en soi</strong>. La vérité absolue (platonicienne) nous est inaccessible — mais la <strong>vérité morale</strong> (dire la vérité) est impérative."
+        }
+    ],
+    synthese: "De Protagoras à Kant, la vérité passe du <strong>relativisme total</strong> à la <strong>quête d'absolu</strong> (Platon) puis à une <strong>vérité limitée mais morale</strong> (Kant). La question finale : peut-on atteindre la vérité, et faut-il toujours la dire ?",
+    exemples: [
+        "<b>Jean-Claude Romand</b> : a menti sur toute sa vie, tuant sa famille — la vérité comme condition de l'existence.",
+        "<b>Le garçon qui criait au loup</b> : perte de confiance par le mensonge.",
+        "<b>Fake news et post-vérité</b> : le retour du relativisme protagoréen ?"
+    ]
+},
+{
+    id: 12,
+    title: "Le Bonheur",
+    color: "n6",
+    preview: "Plaisir, ataraxie, harmonie — trois chemins vers le bonheur",
+    definitions: [
+        "<b>État de satisfaction durable</b> : se distingue du plaisir, qui est éphémère.",
+        "<b>Étymologie</b> : 'bonne heure', suggérant que les heureux sont chanceux.",
+        "<b>Bonheur vs Plaisir</b> : le plaisir est passager, le bonheur est une <strong>disposition stable</strong>.",
+        "<b>Bonheur et désir</b> : le bonheur suppose-t-il l'accomplissement ou l'absence de désir ?"
+    ],
+    philosophes: [
+        {
+            name: "Épicure",
+            work: "Lettre à Ménécée",
+            step: 1,
+            quote: "La recherche du bonheur implique la recherche de la sagesse et le bon usage de la raison.",
+            explain: "Épicure propose un <strong>bonheur accessible</strong> : l'<em>ataraxie</em> (absence de troubles de l'âme). Ce n'est pas le plaisir débordant mais la <strong>sérénité</strong> obtenue par la modération, l'amitié et la sagesse. Le bonheur est <em>simple et naturel</em> — il ne demande pas la richesse ni le pouvoir."
+        },
+        {
+            name: "Platon",
+            work: "La République",
+            step: 2,
+            quote: "Le bonheur correspond à une harmonie entre les trois instances de l'âme.",
+            explain: "Platon complexifie : le bonheur n'est pas simple sérénité, c'est <strong>harmonie intérieure</strong>. L'âme a trois parties (raison, courage, désir) que la raison doit <em>discipliner</em>. Le bonheur du tyran (soumis au désir) n'est pas vrai bonheur — seul le <strong>sage gouverné par la raison</strong> est heureux."
+        },
+        {
+            name: "Kant",
+            work: "Fondements de la métaphysique des mœurs",
+            step: 3,
+            quote: "Le bonheur est une idée indéterminée, vague, un idéal de l'imagination.",
+            explain: "Kant <em>déconstruit</em> le bonheur : c'est un <strong>rêve</strong>, une idée vague que chacun définit différemment. Pire : poursuivre le bonheur peut nous égarer de la <strong>morale</strong>. Le devoir moral est clair et rationnel ; le bonheur est <strong>indéterminé et potentiellement immoral</strong>. La morale prime sur le bonheur."
+        }
+    ],
+    synthese: "Le bonheur évolue de <strong>sérénité accessible</strong> (Épicure) à <strong>harmonie rationnelle</strong> (Platon) puis à <strong>illusion dangereuse</strong> (Kant). La tension finale : faut-il renoncer au bonheur pour être moral, ou la morale mène-t-elle au vrai bonheur ?",
+    exemples: [
+        "<b>Rousseau aux Charmettes</b> : bonheur simple, vie jeune et insouciante — épicurisme.",
+        "<b>Hedonisme contemporain</b> : consommation, plaisirs immédiats — le bonheur comme plaisir ?",
+        "<b>Bhoutan et l'indice de bonheur national brut</b> : peut-on mesurer le bonheur ?"
+    ]
+},
+
+{
+    id: 13,
+    title: "Le Devoir",
+    color: "n1",
+    preview: "Obligation, choix et conscience — qu'est-ce qui nous oblige ?",
+    definitions: [
+        "<b>Devoir</b> : nécessité de faire quelque chose, obligation morale.",
+        "<b>Obligation vs Contrainte</b> : l'obligation implique le choix, la contrainte non.",
+        "<b>Devoirs légaux</b> (lois), <b>sociaux</b> (règles), <b>moraux</b> (faire le bien).",
+        "<b>Impératif catégorique</b> (Kant) : agir de manière à universaliser sa maxime."
+    ],
+    philosophes: [
+        {
+            name: "Rousseau",
+            work: "Émile ou De l'éducation",
+            step: 1,
+            quote: "La voix du devoir moral est l'arbitre infaillible du bien et du mal à l'intérieur de nous.",
+            explain: "Rousseau fonde le devoir sur une <strong>voix intérieure</strong>, un <em>instinct divin</em> inné. La conscience morale nous dit naturellement ce qui est bien. Le devoir n'est pas imposé de l'extérieur — il <strong>jaillit de notre nature profonde</strong>. C'est une vision intuitive et optimiste du devoir moral."
+        },
+        {
+            name: "Kant",
+            work: "Fondements de la métaphysique des mœurs",
+            step: 2,
+            quote: "L'impératif moral est catégorique et inconditionnel.",
+            explain: "Kant <em>rationalise</em> le devoir : il n'est pas une voix mystérieuse mais une <strong>loi que la raison se donne à elle-même</strong>. L'impératif catégorique : agis selon une maxime que tu peux <strong>vouloir comme loi universelle</strong>. Le devoir est <strong>rationnel, universel et absolu</strong> — pas subjectif."
+        },
+        {
+            name: "Hegel",
+            work: "Principes de la philosophie du droit",
+            step: 3,
+            quote: "La morale ne se réduit pas à sa forme logique ; elle consiste à faire vivre les règles particulières de la communauté.",
+            explain: "Hegel critique Kant : le devoir abstrait (universel) est <strong>vide</strong>. La morale réelle s'incarne dans les <em>institutions concrètes</em> (famille, État, société civile). Le devoir n'est pas seulement une maxime intérieure — c'est <strong>vivre les règles de sa communauté</strong>. Le devoir kantien manque de contenu historique et social."
+        }
+    ],
+    synthese: "Le devoir passe de <strong>voix intérieure intuitive</strong> (Rousseau) à <strong>loi rationnelle universelle</strong> (Kant) puis à <strong>incarnation sociale concrète</strong> (Hegel). Chaque étape complexifie : le devoir n'est ni simple sentiment, ni simple calcul — il est <strong>intime, rationnel et social à la fois</strong>.",
+    exemples: [
+        "<b>Tu ne tueras point</b> (film) : devoir de citoyen (combattre) vs devoir de croyant (ne pas tuer).",
+        "<b>Mentir à sa copine</b> : l'action est-elle universalisable ? Test kantien.",
+        "<b>Désobéissance civile</b> (Arendt) : le devoir de penser par soi-même, au-delà des règles."
+    ]
+},
+{
+    id: 14,
+    title: "Le Langage",
+    color: "n2",
+    preview: "Parole, pensée, action — le langage fait-il l'homme ?",
+    definitions: [
+        "<b>Langage</b> : capacité à exprimer une pensée ou communiquer par un système de signes.",
+        "<b>Langue vs Langage</b> : la langue est un système particulier, le langage est la capacité générale.",
+        "<b>Actes de langage</b> (Austin) : le langage ne décrit pas seulement — il <strong>fait</strong> des choses.",
+        "<b>Langage et pensée</b> : pensons-nous dans le langage, ou le langage exprime-t-il une pensée préexistante ?"
+    ],
+    philosophes: [
+        {
+            name: "Aristote",
+            work: "Politique",
+            step: 1,
+            quote: "L'homme est un animal politique car il possède la parole (logos).",
+            explain: "Aristote fonde le <strong>lien entre langage et humanité</strong> : le <em>logos</em> (parole/raison) distingue l'homme de l'animal. Le langage permet de <strong>distinguer le juste de l'injuste</strong>, le bien du mal. Sans langage, pas de politique, pas de morale, pas d'humanité proprement dite."
+        },
+        {
+            name: "Austin",
+            work: "Quand dire c'est faire",
+            step: 2,
+            quote: "Le langage ne sert pas seulement à décrire le monde, mais aussi à réaliser des actions.",
+            explain: "Austin révolutionne : le langage n'est pas seulement <em>dire</em> — il est <strong>faire</strong>. Promettre, ordonner, baptiser, insulter sont des <em>actes de langage</em> qui <strong>changent le monde</strong>. Dire 'je promets' <em>crée</em> une obligation. Le langage est <strong>puissance agissante</strong>."
+        },
+        {
+            name: "Bergson",
+            work: "Le Rire",
+            step: 3,
+            quote: "Les mots sont des étiquettes grossières qui nous masquent la réalité.",
+            explain: "Bergson <em>limite</em> le langage : les mots désignent des <strong>genres</strong>, des catégories générales. Ils ne peuvent pas saisir la <strong>singularité</strong> des choses et des états d'âme. Le langage est utile mais <strong>réducteur</strong> — il fige le fluide de la vie intérieure. La vraie pensée est <em>intuition</em>, pas discours."
+        }
+    ],
+    synthese: "Le langage est d'abord <strong>ce qui fait l'homme</strong> (Aristote), puis <strong>ce qui transforme le monde</strong> (Austin), enfin <strong>ce qui masque la réalité</strong> (Bergson). Chaque philosophe révèle une facette : le langage est fondement, pouvoir et limite à la fois.",
+    exemples: [
+        "<b>Kanzi le bonobo</b> : communique avec des symboles, ment, fait des blagues — langage ou pas ?",
+        "<b>'Je vous déclare mari et femme'</b> : un acte de langage qui crée la réalité (Austin).",
+        "<b>Langage inclusif</b> : changer les mots change-t-il la réalité ? Débat actuel."
+    ]
+},
+{
+    id: 15,
+    title: "Le Temps",
+    color: "n3",
+    preview: "Chronos, durée, kairos — trois façons de vivre le temps",
+    definitions: [
+        "<b>Temps objectif (Chronos)</b> : linéaire, homogène, mesurable en unités égales.",
+        "<b>Temps subjectif (Durée)</b> : expérience intérieure, façon dont nous ressentons le temps.",
+        "<b>Kairos</b> : le bon moment pour agir, l'opportunité.",
+        "<b>Aion</b> : l'éternité, le temps absolu, hors de la succession."
+    ],
+    philosophes: [
+        {
+            name: "Sénèque",
+            work: "De la brièveté de la vie",
+            step: 1,
+            quote: "Ce n'est pas que nous avons peu de temps, c'est que nous en perdons beaucoup.",
+            explain: "Sénèque dénonce le <strong>gaspillage du temps</strong> : nous ne manquons pas de temps, nous le <em>squanderons</em> en futilités et en travail compulsif. Le temps est <strong>la seule chose qui nous appartienne vraiment</strong> — et nous le donnons aux autres. La sagesse stoïcienne, c'est <strong>vivre le présent pleinement</strong>."
+        },
+        {
+            name: "Bergson",
+            work: "Essai sur les données immédiates de la conscience",
+            step: 2,
+            quote: "La durée est la forme que prend la succession de nos états de conscience.",
+            explain: "Bergson oppose <em>temps</em> (mesure spatiale, homogène) et <strong>durée</strong> (expérience vécue, hétérogène, qualitative). Le temps vécu n'est pas divisible en secondes égales — une heure d'ennui et une heure de joie ne sont <strong>pas le même temps</strong>. La conscience est <strong>saisie pure de la durée</strong>."
+        },
+        {
+            name: "Heidegger",
+            work: "Être et Temps",
+            step: 3,
+            quote: "L'être-pour-la-mort est le sens le plus propre de l'existence.",
+            explain: "Heidegger radicalise : le temps n'est pas un <em>contenant</em> dans lequel nous sommes — nous <strong>sommes</strong> le temps. Notre existence est <strong>être-pour-la-mort</strong> : la conscience de notre finitude structure <em>tout</em> notre rapport au monde. Le temps n'est pas mesurable — il est <strong>existence même</strong>."
+        }
+    ],
+    synthese: "Le temps est d'abord <strong>ressource à ne pas gaspiller</strong> (Sénèque), puis <strong>expérience vécue qualitative</strong> (Bergson), enfin <strong>structure même de l'existence</strong> (Heidegger). De plus en plus profond : le temps n'est pas 'en dehors' de nous — <strong>nous sommes le temps</strong>.",
+    exemples: [
+        "<b>Accélération sociale</b> : fast-food, speed dating, formats courts — fuite en avant du temps (Sénèque).",
+        "<b>Flow (Csikszentmihalyi)</b> : le temps subjectif disparaît dans l'absorption — Bergson vérifié ?",
+        "<b>Responsabilité envers l'avenir</b> (Jonas) : notre temps engage celui des générations futures."
+    ]
+},
+{
+    id: 16,
+    title: "Le Travail",
+    color: "n4",
+    preview: "Activité, labeur, épanouissement — trois regards sur le travail",
+    definitions: [
+        "<b>Sens large</b> : toute activité humaine visant un résultat déterminé (manuelle et/ou intellectuelle).",
+        "<b>Sens strict</b> : activité professionnelle rémunérée et régulière.",
+        "<b>Travail vs Labeur</b> : le travail est épanouissant, le labeur est pénible et aliénant.",
+        "<b>Travail physique, intellectuel, émotionnel</b> : trois dimensions du travail contemporain."
+    ],
+    philosophes: [
+        {
+            name: "Hegel",
+            work: "Phénoménologie de l'esprit (maître et esclave)",
+            step: 1,
+            quote: "C'est dans l'expérience du travail que nous pouvons nous approprier nos puissances de penser et d'agir.",
+            explain: "Hegel voit le travail comme <strong>appropriation de soi</strong>. L'esclave, en travaillant sur la nature, <em>se forme</em> — il devient conscience de soi. Le travail est <strong>formation de l'humanité</strong> : c'est en transformant le monde que nous nous transformons nous-mêmes. Vision <strong>optimiste et dialectique</strong>."
+        },
+        {
+            name: "Marx",
+            work: "Le Capital",
+            step: 2,
+            quote: "Le travail est fondamental pour l'humanité, mais le travail aliéné est inhumain.",
+            explain: "Marx reprend Hegel mais <em>critique</em> : le travail <strong>devrait</strong> être épanouissant, mais le <strong>travail aliéné</strong> sous le capitalisme détruit l'homme. L'ouvrier ne possède ni le produit, ni le processus, ni son essence. Le travail est <strong>réduit à marchandise</strong> — c'est une <em>perte de soi</em>."
+        },
+        {
+            name: "Nietzsche",
+            work: "Aurore",
+            step: 3,
+            quote: "Le travail moderne abrutit le travailleur en le privant de liberté et d'individualité.",
+            explain: "Nietzsche radicalise Marx : le travail moderne n'est pas seulement aliénant — il est <strong>nivellant</strong>. Il transforme l'homme en <em>travailleur mécanique</em>, incapable de création, de pensée, de grandeur. Le travail est <strong>ennemi de la culture</strong> et de l'individu supérieur. Seul l'<strong>oisiveté créatrice</strong> (le loisir grec) produit la vraie valeur."
+        }
+    ],
+    synthese: "Le travail est d'abord <strong>formation de soi</strong> (Hegel), puis <strong>aliénation sous le capitalisme</strong> (Marx), enfin <strong>nivellement de l'individu</strong> (Nietzsche). La question contemporaine : le travail est-il encore nécessaire à l'épanouissement, ou faut-il le réduire au minimum ?",
+    exemples: [
+        "<b>Genèse</b> : le travail est d'abord tâche agréable, puis punition après la Chute — ambivalence originelle.",
+        "<b>Gig economy</b> (Uber, Deliveroo) : travail précaire, aliénation marxiste actualisée ?",
+        "<b>Semaine de 4 jours</b> : réduire le travail pour mieux vivre — héritage nietzschéen ?"
+    ]
+},
+{
+    id: 17,
+    title: "L'Inconscient",
+    color: "n5",
+    preview: "Refoulement, petite perception, habitus — trois visages de l'inconscient",
+    definitions: [
+        "<b>Sens courant</b> : agir sans avoir fait attention à des choses importantes.",
+        "<b>Sens philosophique fort</b> : ensemble des pensées dans l'esprit sans être dans la conscience.",
+        "<b>2 aspects</b> : ce qu'on perçoit sans le savoir ; désirs refoulés (psychanalyse).",
+        "<b>Morale et liberté</b> : l'inconscient remet-il en cause notre responsabilité ?"
+    ],
+    philosophes: [
+        {
+            name: "Leibniz",
+            work: "Nouveaux Essais sur l'entendement humain",
+            step: 1,
+            quote: "L'inconscient est fait de 'petites perceptions' dont on n'est pas conscient individuellement mais qui s'assemblent.",
+            explain: "Leibniz inaugure la notion d'<strong>inconscient</strong> avec ses <em>petites perceptions</em> : nous percevons constamment des choses sans en avoir <strong>conscience claire</strong> (le bruit de la mer = somme de gouttes). L'inconscient est <strong>continu avec la conscience</strong> — pas un monde séparé, mais un degré inférieur de perception."
+        },
+        {
+            name: "Freud",
+            work: "Le Moi et le Ça",
+            step: 2,
+            quote: "Le moi n'est pas maître dans sa propre maison.",
+            explain: "Freud <em>radicalise</em> : l'inconscient n'est pas seulement des perceptions faibles — c'est un <strong>réservoir de pulsions refoulées</strong> (le Ça). Le désir, la sexualité, l'agressivité sont <strong>censurés</strong> par le Surmoi (morale) et le Moi (réalité). La conscience est <strong>surface trompeuse</strong> — le vrai moi est caché."
+        },
+        {
+            name: "Bourdieu",
+            work: "Esquisse d'une théorie de la pratique",
+            step: 3,
+            quote: "Nos façons de penser et d'agir sont profondément structurées par notre milieu social (Habitus).",
+            explain: "Bourdieu <strong>sociologise</strong> l'inconscient : ce n'est pas seulement psychique (Freud) mais <strong>social</strong>. L'<em>habitus</em> est un ensemble de dispositions inconscientes acquises par notre <strong>classe sociale</strong>, notre famille, notre école. Nous croyons agir librement — mais nous reproduisons <strong>mécaniquement</strong> les structures sociales."
+        }
+    ],
+    synthese: "L'inconscient passe de <strong>perception infime</strong> (Leibniz) à <strong>réservoir pulsionnel refoulé</strong> (Freud) puis à <strong>structure sociale intériorisée</strong> (Bourdieu). Chaque étape élargit le domaine de l'inconscient : psychique, puis social. Sommes-nous <strong>jamais</strong> pleinement conscients de ce qui nous motive ?",
+    exemples: [
+        "<b>Vision aveugle</b> : des aveugles localisent une lumière sans la voir consciemment — Leibniz vérifié.",
+        "<b>Lapsus et actes manqués</b> : expressions involontaires de pulsions refoulées — Freud.",
+        "<b>Goûts culturels</b> (Bourdieu) : pourquoi préfères-tu le jazz ou le rap ? L'habitus décide pour toi."
+    ]
+}
+];
+
+// === RENDER ===
+const container = document.getElementById('notionsContainer');
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+let consulted = new Set();
+
+function renderNotions(arr) {
+    container.innerHTML = '';
+    arr.forEach(n => {
+        const card = document.createElement('div');
+        card.className = 'notion-card';
+        card.setAttribute('data-id', n.id);
+        card.innerHTML = `
+            <div class="notion-header" onclick="toggleCard(${n.id})">
+                <div class="notion-num ${n.color}">${n.id}</div>
+                <div class="notion-info">
+                    <div class="notion-title">${n.title}</div>
+                    <div class="notion-preview">${n.preview}</div>
+                </div>
+                <div class="notion-arrow">▼</div>
+            </div>
+            <div class="notion-body">
+                <div class="def-block">
+                    <h4>📌 Définitions & Concepts clés</h4>
+                    ${n.definitions.map(d => `<p>${d}</p>`).join('')}
+                </div>
+                <div class="philos-block">
+                    <h4>🗣️ Philosophes — Du simple au complexe</h4>
+                    <div class="philos-flow">
+                        ${n.philosophes.map((p, i) => `
+                            <div class="philos-step ${i === n.philosophes.length-1 ? 'active' : ''}" data-step="${p.step}">
+                                <div class="philos-name">${p.name}</div>
+                                <div class="philos-work">${p.work}</div>
+                                <div class="philos-quote"><p>${p.quote}</p></div>
+                                <div class="philos-explain">${p.explain}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="synth-block">
+                    <h4>🧩 Synthèse</h4>
+                    <p>${n.synthese}</p>
+                </div>
+                <div class="ex-block">
+                    <h4>💡 Exemples pour la dissertation</h4>
+                    ${n.exemples.map(e => `<div class="ex-item">${e}</div>`).join('')}
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function toggleCard(id) {
+    const card = document.querySelector(`.notion-card[data-id="${id}"]`);
+    const isOpen = card.classList.contains('opened');
+    // Close all
+    document.querySelectorAll('.notion-card').forEach(c => c.classList.remove('opened'));
+    // Open clicked if was closed
+    if (!isOpen) {
+        card.classList.add('opened');
+        if (!consulted.has(id)) {
+            consulted.add(id);
+            updateProgress();
+        }
+        // Smooth scroll to card
+        setTimeout(() => {
+            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+}
+
+function updateProgress() {
+    const pct = Math.round(consulted.size / notions.length * 100);
+    progressFill.style.width = pct + '%';
+    progressText.textContent = `${consulted.size} / ${notions.length} notions consultées`;
+}
+
+// Search
+const searchBox = document.getElementById('searchBox');
+searchBox.addEventListener('input', function() {
+    const val = this.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    const filtered = notions.filter(n => {
+        const text = (n.title + ' ' + n.preview + ' ' + n.philosophes.map(p => p.name).join(' ')).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        return text.includes(val);
+    });
+    renderNotions(filtered);
+});
+
+// Init
+renderNotions(notions);
+updateProgress();
+</script>
+</body>
+</html>
